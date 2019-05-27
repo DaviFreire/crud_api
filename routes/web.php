@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
 
 Route::group(['prefix' => 'api/v1', 'namespace' => 'Api\V1', 'middleware' => 'client'], function () {
     Route::get('products', 'ProductController@show');
-    Route::post('products/', 'ProductController@store');
+    Route::post('products', 'ProductController@store');
     Route::put('products/{id}', 'ProductController@update');
     Route::delete('products/{id}', 'ProductController@destroy');
 });

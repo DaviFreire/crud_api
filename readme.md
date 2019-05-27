@@ -1,21 +1,64 @@
-# Lumen PHP Framework
+# Desafio VS
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+## Iniciando
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+```bash
+$ git clone https://github.com/DaviFreire/crud_api.git
+$ cd crud_api
+$ docker-compose up
+```
 
-## Official Documentation
+## Criando token de acesso
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+```bash
+$ docker-compose exec app php artisan passport:client --client
+```
 
-## Security Vulnerabilities
+O comando acima irá retornar uma mensagem no formato abaixo:
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+```
+Password grant client created successfully.
+Client ID: 3
+Client Secret: RZZyELdtmVrFmujA7NLCep9srvSHsvz91bVTtnnh
+```
 
-## License
+Para obter o token de acesso é preciso realizar a requisição na url `http://localhost/api/v1/oauth/token` com o seguinte application/json:
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+{
+    "grant_type": "client_credentials",
+    "scope": "*",
+    "client_id": "[CLIENT_ID]",
+    "client_secret": "[CLIENT_SECRET]"
+}
+```
+
+Onde `CLIENT_ID` e `CLIENT_SECRET` são os valores da mensagem cima.
+
+## API
+
+Utilizando o token no `header` como `Authorization` do tipo `Bearer`, podemos realizar as seguintes operações:
+
+```
+GET     'http://localhost/api/v1/products';
+POST    'http://localhost/api/v1/products';
+PUT     'http://localhost/api/v1/products/{id}';
+DELETE  'http://localhost/api/v1/products/{id}';
+```
+
+Para o método GET podemos passar os seguintes parâmetros:
+
+- `q` - Filtra o nome do produto
+- `filter` - Filtra o produto pelos seus campos. Ex.: `http://localhost/api/v1/products?filter=brand:BUNZL`
+- `page` - Seleciona a página a ser retornada
+- `l` - Quantidade de registros por página
+- `sort` - Ordena a busca. Ex.: `http://localhost/api/v1/products?sort=brand:desc`
+
+## Seeding
+
+Use o seguinte comando para popular o banco com dados fictícios:
+
+```bash
+docker-compose exec app php artisan db:seed
+```
+

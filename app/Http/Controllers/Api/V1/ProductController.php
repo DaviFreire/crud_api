@@ -90,17 +90,28 @@ class ProductController extends Controller
         
         $filter = $request->get('filter') ? explode(':', $request->get('filter')) : '';
         $page   = $request->get('page') ? $request->get('page') : null;
-        $l      = $request->get('l') ? $request->get('l') : null;
+        $l      = $request->get('l') ? $request->get('l') : 100;
+        $sort   = $request->get('sort') ? explode(':', $request->get('sort')) : null;
 
         $query = $this->product::query();
 
         if ($name) {
-            echo 'oi';
             $query->where('name', 'like', "%$name%");
         }
 
-        if ($filter && count($filter) == 2 && in_array($filter[0], ['brand', 'price', 'quantity'])) {
+        $fields = ['id', 'brand', 'price', 'quantity', 'created_at'];
+        $validateFilter = $filter && count($filter) == 2 && in_array($filter[0], $fields);
+
+        if ($validateFilter) {
             $query->where($filter[0], 'like', "%{$filter[1]}%");
+        }
+
+        $fields[] = 'name';
+        $sortedBy = ['desc', 'asc'];
+        $validateSort = $sort && count($sort) == 2 && in_array($sort[0], $fields) && in_array($sort[1], $sortedBy);
+
+        if ($validateSort) {
+            $query->orderBy($sort[0], $sort[1]);
         }
 
         return $query->paginate($l, ['*'], 'page', $page);
