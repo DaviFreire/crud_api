@@ -8,6 +8,12 @@ $_/composer
 # Create .env
 cp .env.example .env
 
+echo "==> Running migration"
+php artisan migrate
+
+echo "==> Installing passport"
+php artisan passport:install
+
 # Start php-fpm
 echo "===> Initializing php-fpm"
 php-fpm

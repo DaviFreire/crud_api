@@ -5,9 +5,13 @@ LABEL maintainer "Davi Freire"
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 
 RUN apk update && apk --no-cache add \
-    curl-dev \
     build-base \
-    autoconf
+    git \
+    shadow
+
+RUN docker-php-ext-install \
+    pdo_mysql \
+    mysqli
 
 # Copy composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -7,7 +7,7 @@ services:
 
   app:
     build: ./docker/app/
-    working_dir: /opt/picpay
+    working_dir: /opt/veus
     volumes:
       - .:/opt/veus
     depends_on:
@@ -20,7 +20,7 @@ services:
     ports:
       - '3306:3306'
     environment:
-      MYSQL_DATABASE: mysql
+      MYSQL_DATABASE: veus
       MYSQL_USER: root
       MYSQL_PASSWORD:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
